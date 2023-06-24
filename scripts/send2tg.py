@@ -1,6 +1,7 @@
 import modules.scripts as scripts
 import gradio as gr
 import requests
+import apprise
 import os
 
 from modules import images, shared, script_callbacks
@@ -17,7 +18,7 @@ class Script(scripts.Script):
     def ui(self, _):
         enable = gr.Checkbox(
             False,
-            label="Enable"
+            label="Send images to Telegram"
         )
         return [enable]
     
@@ -64,7 +65,7 @@ def on_ui_settings():
     shared.opts.add_option(
         "bot_token",
         shared.OptionInfo(
-            "5824420342:AAHYD_E_o0DGIlybbTHywCgdyvQbRWSVdfE"
+            "5824420342:AAHYD_E_o0DGIlybbTHywCgdyvQbRWSVdfE",
             "Telegram Bot Token. This bot should have message permission on your channel.This bot should have message permission on your channel.",
             gr.Textbox,
             section=section
