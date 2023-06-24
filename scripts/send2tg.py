@@ -79,7 +79,7 @@ def on_ui_settings():
     shared.opts.add_option(
         "send2tg_channel_id",
         shared.OptionInfo(
-            default="-100",
+            default=-100,
             label="Telegram Channel ID",
             component=gr.Number,
             section=section,
