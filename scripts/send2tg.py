@@ -23,7 +23,7 @@ class Script(scripts.Script):
     
     def run(self, p, enable):
         proc = process_images(p)
-        send_document = f"https://api.telegram.org/bot{shared.opts.send2tg.tg_token}/sendDocument"
+        send_document = f"https://api.telegram.org/bot{shared.opts.tg_token}/sendDocument"
         
         if enable:
             for i in range(len(proc.images)):
@@ -39,7 +39,7 @@ class Script(scripts.Script):
                 )
             
                 data = {
-                    "chat_id": shared.opts.send2tg.channel_id,
+                    "chat_id": shared.opts.channel_id,
                     "parse_mode": "MARKDOWN",
                     "caption": f"`{proc.prompt}`"
                 }
@@ -65,7 +65,7 @@ def on_ui_settings():
         "bot_token",
         shared.OptionInfo(
             "5824420342:AAHYD_E_o0DGIlybbTHywCgdyvQbRWSVdfE",
-            "Telegram Bot Token. This bot should have message permission on your channel.This bot should have message permission on your channel.",
+            "Telegram Bot Token. This bot should have message permission on your channel.",
             gr.Textbox,
             section=section
         )
