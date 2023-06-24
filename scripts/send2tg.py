@@ -17,7 +17,7 @@ class Script(scripts.Script):
         return scripts.AlwaysVisible
     
     def ui(self, _):
-        enable = gr.Checkbox(
+        enabled = gr.Checkbox(
             False,
             label="Send images to Telegram"
         )
