@@ -65,10 +65,8 @@ def on_ui_settings():
         "bot_token",
         shared.OptionInfo(
             ""
-            "Telegram Bot Token",
-            gr.Textbox(
-                info="This bot should have message permission on your channel."
-            ),
+            "Telegram Bot Token. This bot should have message permission on your channel.This bot should have message permission on your channel.",
+            gr.Textbox,
             section=section
         )
     )
@@ -76,10 +74,8 @@ def on_ui_settings():
         "channel_id",
         shared.OptionInfo(
             "",
-            "Channel ID",
-            gr.Number(
-                info="Channel ID of your Telegram channel where the bot would send the images."
-            ),
+            "Channel ID of your Telegram channel where the bot would send the images.",
+            gr.Number,
             section=section
         )
     )
