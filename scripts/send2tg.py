@@ -3,8 +3,10 @@ import gradio as gr
 import requests
 import os
 
-from modules import images, shared, script_callbacks
-from modules.processing import process_images
+from modules import images, script_callbacks
+from modules.processing import process_images, Processed
+from modules.processing import Processed
+from modules.shared import opts, cmd_opts, state, OptionInfo
 
 class Script(scripts.Script):
 
@@ -19,15 +21,16 @@ class Script(scripts.Script):
             False,
             label="Send images to Telegram"
         )
-        return [enable]
+        
+        return [enabled]
     
-    def run(self, p, enable):
+    def run(self, p, enabled):
         proc = process_images(p)
         
-        method = "sendDocument" if shared.opts.send2tg_as_document else "sendPhoto"
-        send_document = f"https://api.telegram.org/bot{shared.opts.send2tg_bot_token}/{method}"
+        method = "sendDocument" if opts.send2tg_as_document else "sendPhoto"
+        tg_api = f"https://api.telegram.org/bot{opts.send2tg_bot_token}/{method}"
         
-        if enable and shared.opts.send2tg_bot_token and shared.opts.send2tg_channel_id:
+        if (enabled and opts.send2tg_bot_token and opts.send2tg_channel_id):
             for i in range(len(proc.images)):
                 image, txt = images.save_image(
                     image=proc.images[i],
@@ -41,7 +44,7 @@ class Script(scripts.Script):
                 )
             
                 data = {
-                    "chat_id": shared.opts.send2tg_channel_id,
+                    "chat_id": opts.send2tg_channel_id,
                     "parse_mode": "MARKDOWN",
                     "caption": f"`{proc.prompt}`"
                 }
@@ -51,7 +54,7 @@ class Script(scripts.Script):
                 }
             
                 requests.post(
-                    send_document,
+                    tg_api,
                     data=data,
                     files=files,
                     stream=True
@@ -63,32 +66,35 @@ class Script(scripts.Script):
 def on_ui_settings():
     section = ('send2tg', "Send to Telegram")
     
-    shared.opts.add_option(
+    opts.add_option(
         "send2tg_bot_token",
-        shared.OptionInfo(
-            default=None,
+        OptionInfo(
+            default="",
             label="Telegram Bot Token",
             component=gr.Textbox,
             component_args={
-                "placeholder": "Enter your Telegram Bot ID here."
+                "placeholder": "123456789:xxxxxxxxxxxxxxxxxxxxxxxxx"
             },
             section=section,
-            comment_after="This bot should have message permission to the channel you specify below."
+            comment_after="(This bot should have message permission to the channel you specify below.)"
         )
     )
-    shared.opts.add_option(
+    opts.add_option(
         "send2tg_channel_id",
-        shared.OptionInfo(
-            default=-100,
+        OptionInfo(
+            default="",
             label="Telegram Channel ID",
-            component=gr.Number,
+            component=gr.Textbox,
+            component_args={
+                "placeholder": "-1001234567890"
+            },
             section=section,
-            comment_after="This the channel where the bot will send images."
+            comment_after="(This is the channel where the bot will send images.)"
         )
     )
-    shared.opts.add_option(
+    opts.add_option(
         "send2tg_as_document",
-        shared.OptionInfo(
+        OptionInfo(
             default=True,
             label="Send as Document",
             component=gr.Checkbox,
