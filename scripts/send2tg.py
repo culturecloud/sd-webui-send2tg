@@ -3,10 +3,9 @@ import gradio as gr
 import requests
 import os
 
-from modules import images, script_callbacks
-from modules.processing import process_images, Processed
-from modules.processing import Processed
-from modules.shared import opts, cmd_opts, state, OptionInfo
+from modules import images
+from modules.processing import process_images
+from modules.shared import opts, OptionInfo
 
 class Script(scripts.Script):
 
@@ -70,7 +69,7 @@ def on_ui_settings():
         "send2tg_bot_token",
         OptionInfo(
             default="",
-            label="Telegram Bot Token",
+            label="Bot Token",
             component=gr.Textbox,
             component_args={
                 "placeholder": "123456789:xxxxxxxxxxxxxxxxxxxxxxxxx"
@@ -83,7 +82,7 @@ def on_ui_settings():
         "send2tg_channel_id",
         OptionInfo(
             default="",
-            label="Telegram Channel ID",
+            label="Channel ID",
             component=gr.Textbox,
             component_args={
                 "placeholder": "-1001234567890"
@@ -102,4 +101,4 @@ def on_ui_settings():
         )
     )
         
-script_callbacks.on_ui_settings(on_ui_settings)
+scripts.script_callbacks.on_ui_settings(on_ui_settings)
