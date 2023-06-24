@@ -41,7 +41,7 @@ class Script(scripts.Script):
                 )
             
                 data = {
-                    "chat_id": shared.opts.channel_id,
+                    "chat_id": shared.opts.send2tg_channel_id,
                     "parse_mode": "MARKDOWN",
                     "caption": f"`{proc.prompt}`"
                 }
