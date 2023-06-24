@@ -1,9 +1,8 @@
-import modules.scripts as scripts
 import gradio as gr
 import requests
 import os
 
-from modules import images
+from modules import images, scripts, script_callbacks
 from modules.processing import process_images
 from modules.shared import opts, OptionInfo
 
@@ -23,8 +22,7 @@ class Script(scripts.Script):
         
         return [enabled]
     
-    def run(self, p, enabled):
-        proc = process_images(p)
+    def postprocess(self, p, proc, enabled):
         
         method = "sendDocument" if opts.send2tg_as_document else "sendPhoto"
         tg_api = f"https://api.telegram.org/bot{opts.send2tg_bot_token}/{method}"
@@ -60,7 +58,7 @@ class Script(scripts.Script):
                 )
             
         return proc
-
+        
 
 def on_ui_settings():
     section = ('send2tg', "Send to Telegram")
@@ -100,5 +98,7 @@ def on_ui_settings():
             section=section
         )
     )
-        
-scripts.script_callbacks.on_ui_settings(on_ui_settings)
+
+
+#script_callbacks.on_image_saved(on_image_saved)
+script_callbacks.on_ui_settings(on_ui_settings)
