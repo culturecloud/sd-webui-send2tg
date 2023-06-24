@@ -23,9 +23,11 @@ class Script(scripts.Script):
     
     def run(self, p, enable):
         proc = process_images(p)
-        send_document = f"https://api.telegram.org/bot{shared.opts.tg_token}/sendDocument"
         
-        if enable:
+        method = "sendDocument" if shared.opts.send2tg_as_document else "sendPhoto"
+        send_document = f"https://api.telegram.org/bot{shared.opts.send2tg_bot_token}/{method}"
+        
+        if enable and shared.opts.send2tg_bot_token and shared.opts.send2tg_channel_id:
             for i in range(len(proc.images)):
                 image, txt = images.save_image(
                     image=proc.images[i],
@@ -45,7 +47,7 @@ class Script(scripts.Script):
                 }
             
                 files = {
-                    "document": open(image, "rb")
+                    f"{'document' if method == 'sendDocument' else 'photo'}": open(image, "rb")
                 }
             
                 requests.post(
@@ -62,20 +64,34 @@ def on_ui_settings():
     section = ('send2tg', "Send to Telegram")
     
     shared.opts.add_option(
-        "bot_token",
+        "send2tg_bot_token",
         shared.OptionInfo(
-            "5824420342:AAHYD_E_o0DGIlybbTHywCgdyvQbRWSVdfE",
-            "Telegram Bot Token. This bot should have message permission on your channel.",
-            gr.Textbox,
-            section=section
+            default=None,
+            label="Telegram Bot Token",
+            component=gr.Textbox,
+            component_args={
+                "placeholder": "Enter your Telegram Bot ID here."
+            },
+            section=section,
+            comment_after="This bot should have message permission to the channel you specify below."
         )
     )
     shared.opts.add_option(
-        "channel_id",
+        "send2tg_channel_id",
         shared.OptionInfo(
-            "-1001974141145",
-            "Channel ID of your Telegram channel where the bot would send the images.",
-            gr.Number,
+            default="-100",
+            label="Telegram Channel ID",
+            component=gr.Number,
+            section=section,
+            comment_after="This the channel where the bot will send images."
+        )
+    )
+    shared.opts.add_option(
+        "send2tg_as_document",
+        shared.OptionInfo(
+            default=True,
+            label="Send as Document",
+            component=gr.Checkbox,
             section=section
         )
     )
