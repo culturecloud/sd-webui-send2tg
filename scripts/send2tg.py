@@ -1,7 +1,6 @@
 import modules.scripts as scripts
 import gradio as gr
 import requests
-import apprise
 import os
 
 from modules import images, shared, script_callbacks
