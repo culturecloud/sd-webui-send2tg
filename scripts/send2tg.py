@@ -2,16 +2,21 @@ import gradio as gr
 import requests
 
 from modules import script_callbacks
-from modules.shared import opts, OptionInfo
+from modules.shared import opts, cmd_opts, OptionInfo
 
 
 def on_image_saved(params):
-    method = "sendDocument" if opts.send2tg_as_document else "sendPhoto"
-    tg_api = f"https://api.telegram.org/bot{opts.send2tg_bot_token}/{method}"
+    send2tg_bot_token = cmd_opts.send2tg_bot_token or opts.send2tg_bot_token
+    send2tg_channel_id = cmd_opts.send2tg_channel_id or opts.send2tg_channel_id
+    send2tg_as_document = True if (not cmd_opts.send2tg_as_photo or opts.send2tg_as_document) else False
+    send2tg_enabled = True if (send2tg_bot_token and send2tg_channel_id) else False
     
-    if (opts.send2tg_enabled and opts.send2tg_bot_token and opts.send2tg_channel_id):
+    method = "sendDocument" if send2tg_as_document else "sendPhoto"
+    tg_api = f"https://api.telegram.org/bot{send2tg_bot_token}/{method}"
+    
+    if send2tg_enabled:
         data = {
-            "chat_id": opts.send2tg_channel_id,
+            "chat_id": send2tg_channel_id,
             "parse_mode": "MARKDOWN",
             "caption": f"`{params.p.prompt}`"
         }
