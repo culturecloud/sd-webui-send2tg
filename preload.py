@@ -4,13 +4,13 @@ import argparse
 def preload(parser: argparse.ArgumentParser):
     parser.add_argument(
         "--send2tg-bot-token",
-        action=str,
+        type=str,
         help="Telegram bot token. Obtain from @botfather",
     )
 
     parser.add_argument(
         "--send2tg-channel-id",
-        action=str,
+        type=str,
         help="Telegram user/group/channel ID",
     )
 
