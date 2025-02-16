@@ -1,6 +1,5 @@
 import argparse
 
-
 def preload(parser: argparse.ArgumentParser):
     parser.add_argument(
         "--send2tg-bot-token",

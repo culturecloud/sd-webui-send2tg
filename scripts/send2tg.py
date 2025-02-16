@@ -1,8 +1,8 @@
 import gradio as gr
 import requests
 
-from modules import script_callbacks
-from modules.shared import opts, cmd_opts, OptionInfo
+from modules import script_callbacks # pylint: disable=import-error
+from modules.shared import opts, cmd_opts, OptionInfo # pylint: disable=import-error
 
 
 def on_image_saved(params):

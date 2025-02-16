@@ -1,6 +1,18 @@
+# sdnext installer
+"""
+import installer
+
+dependencies = ['onnxruntime']
+for dependency in dependencies:
+    if not installer.installed(dependency, reload=False, quiet=True):
+        installer.install(dependency, ignore=False)
+"""
+
+# a1111 installer
+"""
 import launch
 
-# TODO: add pip dependency if need extra module only on extension
-
-# if not launch.is_installed("aitextgen"):
-#     launch.run_pip("install aitextgen==0.6.0", "requirements for MagicPrompt")
+for dep in ['onnxruntime']:
+    if not launch.is_installed(dep):
+        launch.run_pip(f"install {dep}", f"{dep}")
+"""
